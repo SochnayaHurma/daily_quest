@@ -1,6 +1,5 @@
 from datetime import datetime, timedelta
 
-from fastapi import HTTPException, status
 import jwt
 import bcrypt
 
@@ -26,8 +25,8 @@ def verify_password(
 
 def encode_jwt(
         payload: dict[str, str | int],
-        secret_key: str = settings.SECRET_KEY,
-        expire_minutes: int = settings.TOKEN_EXPIRE_MINUTES
+        secret_key: str = settings.auth.SECRET_KEY,
+        expire_minutes: int = settings.auth.TOKEN_EXPIRE_MINUTES
 ):
     iat = datetime.utcnow()
     exp = iat + timedelta(minutes=expire_minutes)
@@ -43,10 +42,10 @@ def encode_jwt(
 
 def decode_jwt(
         token: str | bytes,
-        secret_key: str = settings.SECRET_KEY,
+        secret_key: str = settings.auth.SECRET_KEY,
 ):
     return jwt.decode(
         jwt=token,
         key=secret_key,
-        algorithms=settings.TOKEN_ALGORITHM
+        algorithms=settings.auth.TOKEN_ALGORITHM
     )

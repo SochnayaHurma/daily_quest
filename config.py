@@ -14,13 +14,17 @@ class PostgresSettings(BaseSettings):
     POSTGRES_DB: str
 
 
-class Settings(BaseSettings):
-    db_settings: PostgresSettings = PostgresSettings()
-    SECRET_KEY: str
+class AuthSettings(BaseSettings):
     TOKEN_EXPIRE_MINUTES: int = 60 * 24 * 30
     TOKEN_ALGORITHM: str = 'HS256'
-    DEBUG: bool = True
+    SECRET_KEY: str
 
+
+class Settings(BaseSettings):
+    db_settings: PostgresSettings = PostgresSettings()
+    auth: AuthSettings = AuthSettings()
+
+    DEBUG: bool = True
     CONTRACT_COOKIE_NAME: str = 'contract_id'
 
 
