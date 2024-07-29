@@ -18,8 +18,8 @@ async def get_user_analytic(
 
 @router.get('/list/')
 async def list_contracts(
-        contracts: 'PublicContract' = Depends(contract.get_list_contracts)
-) -> 'PublicContract':
+        contracts: list[PublicContractDetail] = Depends(contract.get_list_contracts)
+) -> list[PublicContractDetail]:
     """Возвращает список контрактов"""
     return contracts
 
