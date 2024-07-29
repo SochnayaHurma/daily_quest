@@ -6,7 +6,7 @@ from starlette.responses import Response
 
 from config import settings
 from service_layer import get_unit_of_work
-from schemas.contract import PublicContractDetail, CreateContract, PublicContract, EditContract
+from schemas.contract import PublicContractDetail, CreateContract, EditContract
 
 if TYPE_CHECKING:
     from service_layer.unit_of_work import SqlAlchemyUnitOfWork
@@ -25,44 +25,30 @@ async def get_current_contract(
 ) -> 'Contract':
     if contract_id:
         contract = await uow.contract.get(contract_id=contract_id)
-        if not contract:
-            raise HTTPException(
-                status_code=status.HTTP_404_NOT_FOUND,
-                detail=NOT_EXISTS_CONTRACT_ERROR
-            )
+    elif cookie_contract_id:
+        contract = await uow.contract.get(contract_id=cookie_contract_id)
     else:
-        if cookie_contract_id:
-            contract = await uow.contract.get(contract_id=cookie_contract_id)
-        else:
-            contract = await uow.contract.get_last()
-        if not contract:
-            raise HTTPException(
-                status_code=status.HTTP_400_BAD_REQUEST,
-                detail=NOT_FOUND_CONTRACTS
-            )
+        contract = await uow.contract.get_last()
+    if not contract:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=NOT_FOUND_CONTRACTS
+        )
     response.set_cookie(settings.CONTRACT_COOKIE_NAME, str(contract.id))
     return contract
 
 
 async def get_list_contracts(
         uow: 'SqlAlchemyUnitOfWork' = Depends(get_unit_of_work),
-        contract: 'Contract' = Depends(get_current_contract)
-) -> 'PublicContract':
-    current_contract = PublicContractDetail(
+        current_contract: 'Contract' = Depends(get_current_contract)
+) -> list[PublicContractDetail]:
+    return [PublicContractDetail(
         id=contract.id,
         name=contract.name,
-        editable_tasks=contract.editable_tasks
-    )
-    contracts = [PublicContractDetail(
-        id=contract.id,
-        name=contract.name,
-        editable_tasks=contract.editable_tasks
+        editable_tasks=contract.editable_tasks,
+        active=current_contract.id == contract.id
     )
         for contract in await uow.contract.list()]
-    return PublicContract(
-        current_contract=current_contract,
-        contracts=contracts
-    )
 
 
 async def create_contract(
@@ -75,11 +61,6 @@ async def create_contract(
             status_code=status.HTTP_400_BAD_REQUEST
         )
     contract = await uow.contract.create(payload.name, payload.editable_tasks)
-    if not contract:
-        raise HTTPException(
-            detail='Ошибка создания контракта',
-            status_code=status.HTTP_400_BAD_REQUEST
-        )
     return PublicContractDetail(
         id=contract.id,
         name=contract.name,
@@ -102,7 +83,8 @@ async def edit_contract(
             detail=NAME_ALREADY_EXIST,
             status_code=status.HTTP_400_BAD_REQUEST
         )
-    contract = await uow.contract.update(contract_id=payload.id, name=payload.name, editable_tasks=payload.editable_tasks)
+    contract = await uow.contract.update(contract_id=payload.id, name=payload.name,
+                                         editable_tasks=payload.editable_tasks)
 
     return PublicContractDetail(
         id=contract.id,
