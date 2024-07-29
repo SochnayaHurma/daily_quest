@@ -16,6 +16,7 @@ class PublicContractDetail(BaseModel):
     id: int
     name: str
     editable_tasks: int
+    active: bool = False
 
     def __hash__(self):
         return hash((self.id, self.name))
