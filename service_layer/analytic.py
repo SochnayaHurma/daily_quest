@@ -18,10 +18,6 @@ async def get_user_analytic(
         user: 'PublicUser' = Depends(get_current_user),
         uow: 'SqlAlchemyUnitOfWork' = Depends(get_unit_of_work)
 ) -> 'TaskUserAnalytics':
-    print('tut')
-    print('tut')
-    print('tut')
-    print(contract.id)
     analytic = await uow.task.task_analytics(contract_id=contract.id, user_id=user.id)
     user_stat = TaskUserAnalytics()
     for job in analytic:  # type: dict

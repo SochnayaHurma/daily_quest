@@ -3,11 +3,8 @@ from typing import TYPE_CHECKING
 from fastapi import HTTPException, Depends
 from starlette import status
 
-from database.connect import session_factory
 from schemas.contract import PublicContractDetail
-from schemas.user import PublicUser
 from service_layer import get_unit_of_work
-from schemas import PublicJob
 from schemas.contract_jobs import AddContractJob, DropContractJob, AddUserToContractJob, PublicUserContractJobs, \
     SimplePublicJob, UserJobRelation, PublicContractJobs
 from service_layer.contract import get_current_contract
@@ -38,7 +35,7 @@ async def list_user_contract_jobs(
         else:
             no_relations.append(job)
     return PublicUserContractJobs(
-        contract=PublicContractDetail( # TODO нужен ли тут контракт
+        contract=PublicContractDetail(
             id=contract.id,
             name=contract.name,
             editable_tasks=contract.editable_tasks
@@ -72,8 +69,7 @@ async def list_jobs_with_and_no_contract(
     )
 
 
-async def add_job_to_contract( # TODO нужно ли генерировать таски на сегодняшний
-                                # TODO день при добавлении дефолтной работы к контракту
+async def add_job_to_contract(
         payload: AddContractJob,
         uow: 'SqlAlchemyUnitOfWork' = Depends(get_unit_of_work)) -> dict:
     job = await uow.job.get(payload.job_id)

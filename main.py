@@ -15,13 +15,6 @@ template = Path(__file__).parent.parent.joinpath('frontend', 'public')
 app = FastAPI()
 app.include_router(router=router)
 templates = Jinja2Templates(directory='templates')
-app.mount('/static', StaticFiles(directory='static'), name='static')
-
-
-@app.get('/{path:path}')
-async def index(request: Request, path=None):
-    return templates.TemplateResponse(request=request,
-                                      name='index.html')
 
 
 @app.exception_handler(RequestValidationError)

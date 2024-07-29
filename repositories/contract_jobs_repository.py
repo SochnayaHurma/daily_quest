@@ -63,7 +63,6 @@ class ContractJobsRepository(BaseRepository):
         instance = await self.session.scalar(stmt)
         return instance
 
-
     async def edit_job(self, contract_id: int, job_id: int, user_id: int) -> 'ContractJobs':
         stmt = update(ContractJobs).where(
             ContractJobs.contract_id == contract_id,

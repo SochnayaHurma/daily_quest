@@ -6,7 +6,6 @@ from starlette import status
 from schemas.contract import PublicContractDetail
 from service_layer import get_unit_of_work
 from schemas.contract_rooms import AddContractRoom, DropContractRoom, PublicContractRooms, SimplePublicRoom
-from schemas.room import PublicRoom
 from service_layer.contract import get_current_contract
 
 if TYPE_CHECKING:
