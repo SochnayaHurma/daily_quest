@@ -14,7 +14,7 @@ if TYPE_CHECKING:
     from models import Contract
 
 JOB_IS_ALREADY_CONVICTED = 'Данное задание уже привязано к контракту'
-CONTRACT_JOB_RELATION_NOT_EXISTS = 'Связь к которой Вы хотите присоединить пользователя - не существует'
+CONTRACT_JOB_RELATION_NOT_EXISTS = 'Связи к которой Вы хотите присоединить пользователя - не существует'
 
 
 async def list_user_contract_jobs(

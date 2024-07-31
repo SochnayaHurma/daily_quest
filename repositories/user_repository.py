@@ -4,7 +4,7 @@ from typing import Optional
 from sqlalchemy import select, Row, or_
 
 from repositories.base_repository import BaseRepository
-from auth import hash_password
+from service_layer.auth import hash_password
 from models import User
 from schemas.user import PublicUser
 

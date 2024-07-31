@@ -3,7 +3,7 @@ from typing import Annotated, TYPE_CHECKING
 from fastapi import HTTPException, status, Depends
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 
-from auth import verify_password, encode_jwt, decode_jwt
+from service_layer.auth import verify_password, encode_jwt, decode_jwt
 from schemas.user import PublicUser, CreateUserSchema
 from service_layer import get_unit_of_work
 

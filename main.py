@@ -1,20 +1,14 @@
-from pathlib import Path
-
-from fastapi import FastAPI, Request
-from fastapi.templating import Jinja2Templates
-from fastapi.staticfiles import StaticFiles
+from fastapi import FastAPI
 from fastapi.exceptions import RequestValidationError
 from fastapi.responses import JSONResponse
 from fastapi.encoders import jsonable_encoder
-from starlette import status
+from fastapi import status
 
 from api import router
 from schemas.validation_messages import messages
 
-template = Path(__file__).parent.parent.joinpath('frontend', 'public')
 app = FastAPI()
 app.include_router(router=router)
-templates = Jinja2Templates(directory='templates')
 
 
 @app.exception_handler(RequestValidationError)
