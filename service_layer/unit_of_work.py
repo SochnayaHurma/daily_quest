@@ -1,13 +1,11 @@
-from typing import Optional, TYPE_CHECKING, Type, Callable
-import inspect
+from typing import Optional, TYPE_CHECKING, Callable
 import logging
 
 from fastapi import HTTPException, status
 
 from repositories import ContractRepository, RoomRepository, JobRepository, TaskRepository, UserRepository
-from repositories.base_repository import BaseRepository
-from repositories.contract_jobs_repository import ContractJobsRepository
-from repositories.contract_rooms_repository import ContractRoomsRepository
+from repositories.contract.contract_relations.contract_jobs_repository import ContractJobsRepository
+from repositories.contract.contract_relations.contract_rooms_repository import ContractRoomsRepository
 from database.connect import session_factory
 
 if TYPE_CHECKING:
